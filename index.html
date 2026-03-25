@@ -3,14 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sexify Premium</title>
+    <title>Sexify Premium - 你的專屬私密空間</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
     
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
       import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-      const firebaseConfig = { apiKey: "YOUR_API_KEY", authDomain: "YOUR_PROJECT.firebaseapp.com", projectId: "YOUR_PROJECT_ID", storageBucket: "YOUR_PROJECT.appspot.com", messagingSenderId: "YOUR_SENDER_ID", appId: "YOUR_APP_ID" };
+
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
       const app = initializeApp(firebaseConfig);
       const storage = getStorage(app);
       window.firebaseStorage = { storage, ref, uploadBytesResumable, getDownloadURL };
@@ -18,15 +27,27 @@
 
     <style>
         ::-webkit-scrollbar { display: none; }
-        body { -webkit-tap-highlight-color: transparent; user-select: none; font-family: -apple-system, BlinkMacSystemFont, sans-serif; background-color: #fcfcfc; }
+        body { 
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fcfcfc;
+        }
+        /* Sexify 品牌色彩 */
         :root { --sexify-main: #e11d48; }
         .text-sexify { color: var(--sexify-main); }
         .bg-sexify { background-color: var(--sexify-main); }
         .border-sexify { border-color: var(--sexify-main); }
+
+        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         .category-chip.active { background-color: var(--sexify-main); color: white; border-color: var(--sexify-main); }
+        .upload-progress-bar { transition: width 0.3s ease; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* 玻璃效果導航 */
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
@@ -34,66 +55,146 @@
     <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black transition-opacity duration-500">
         <div class="bg-white p-8 rounded-3xl max-w-sm w-11/12 text-center shadow-2xl">
             <h2 class="text-3xl font-black mb-2 text-sexify tracking-tighter">SEXIFY</h2>
-            <p class="text-gray-500 mb-8 text-sm">進入即代表您已滿 18 歲。</p>
+            <p class="text-gray-500 mb-8 text-sm">此平台包含成人內容，進入即代表您已滿 18 歲。</p>
             <button onclick="verifyAge()" class="w-full bg-sexify text-white font-bold py-4 rounded-2xl mb-4 shadow-lg active:scale-95 transition">進入專屬空間</button>
+            <button onclick="window.location.href='https://google.com'" class="text-gray-400 text-sm">我未滿 18 歲</button>
         </div>
     </div>
 
     <div id="app-content" class="filter blur-2xl transition-all duration-500 pointer-events-none">
+        
         <header class="sticky top-0 glass-header border-b z-40 px-5 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-black tracking-tighter text-sexify">SEX<span class="text-black">IFY</span></h1>
-            <div class="flex space-x-5"><i class="fa-regular fa-comment-dots text-xl text-gray-700"></i><i class="fa-regular fa-bell text-xl text-gray-700"></i></div>
+            <div class="flex space-x-5">
+                <i class="fa-regular fa-comment-dots text-xl text-gray-700"></i>
+                <i class="fa-regular fa-bell text-xl text-gray-700"></i>
+            </div>
         </header>
 
         <main class="pb-32">
+            
             <section id="home-tab" class="tab-content active">
+                <section id="home-tab" class="tab-content active">
+    </section>
                 <div class="flex space-x-4 overflow-x-auto p-4 no-scrollbar">
                     <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-red-500 p-0.5"><div class="w-full h-full bg-gradient-to-tr from-orange-400 to-red-600 rounded-full border-2 border-white"></div></div>
                     <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-gray-200 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full border-2 border-white"></div></div>
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-gray-200 p-0.5"><div class="w-full h-full bg-gray-100 rounded-full border-2 border-white"></div></div>
                 </div>
-                <div class="bg-white border-y mt-2">
-                    <div class="p-4 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-purple-600 rounded-full"></div>
-                            <div><span class="font-bold text-sm">Hot_Creator_99</span></div>
+
+                <div class="space-y-6">
+                    <div class="bg-white border-y">
+                        <div class="p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-purple-600 rounded-full"></div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-sm text-gray-800">Hot_Creator_99</span>
+                                    <span class="text-[10px] text-sexify font-bold uppercase tracking-widest">Premium</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis-h text-gray-300"></i>
                         </div>
-                    </div>
-                    <div class="relative aspect-[4/5] bg-gray-100">
-                        <img id="post-img" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000" class="w-full h-full object-cover blur-3xl transition-all">
-                        <div id="post-lock" class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white backdrop-blur-md">
-                            <button onclick="showPay()" class="bg-sexify px-10 py-4 rounded-full font-bold text-sm">訂閱以查看 $9.99/月</button>
+                        <div class="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+                            <img id="post-img" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000" class="w-full h-full object-cover blur-3xl transition-all duration-1000">
+                            <div id="post-lock" class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white backdrop-blur-md">
+                                <div class="bg-white/20 p-6 rounded-full mb-4 border border-white/30"><i class="fa-solid fa-lock text-3xl"></i></div>
+                                <button onclick="showPay()" class="bg-sexify text-white px-10 py-4 rounded-full font-bold text-sm shadow-2xl active:scale-95 transition">訂閱以查看 $9.99/月</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="shop-tab" class="tab-content px-5 pt-4">
-                <h2 class="text-3xl font-black mb-6">SEXIFY 商店</h2>
-                <div class="grid grid-cols-2 gap-4" id="dynamic-shop-grid"></div>
+            <section id="search-tab" class="tab-content px-5 pt-4">
+                <div class="relative mb-6">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="搜尋創作者或關鍵字..." class="w-full bg-gray-100 py-4 pl-12 pr-4 rounded-2xl outline-none focus:ring-2 ring-red-500 transition">
+                </div>
+                <div class="flex space-x-2 overflow-x-auto no-scrollbar mb-8">
+                    <button class="category-chip active flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">全部</button>
+                    <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">Cosplay</button>
+                    <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">POV</button>
+                    <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">ASMR</button>
+                </div>
+                <h3 class="font-black text-lg mb-4">推薦創作者</h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-5 rounded-[2rem] border shadow-sm text-center">
+                        <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 border-4 border-red-50"></div>
+                        <p class="font-bold text-sm">Lily_Rose</p>
+                        <p class="text-[10px] text-sexify mb-3">#POV #Sweet</p>
+                        <button class="w-full bg-black text-white py-2 rounded-xl text-xs font-bold">關注</button>
+                    </div>
+                    <div class="bg-white p-5 rounded-[2rem] border shadow-sm text-center">
+                        <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 border-4 border-purple-50"></div>
+                        <p class="font-bold text-sm">Dark_Queen</p>
+                        <p class="text-[10px] text-purple-600 mb-3">#Cosplay #BDSM</p>
+                        <button class="w-full bg-black text-white py-2 rounded-xl text-xs font-bold">關注</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="shop-tab" class="tab-content">
+                <div class="px-5 pt-4">
+                    <h2 class="text-3xl font-black mb-1">SEXIFY 商店</h2>
+                    <p class="text-gray-400 text-xs mb-6 uppercase tracking-widest">Exclusive Merch</p>
+                </div>
+                <div class="mb-8">
+                    <div class="px-5 flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-lg"><i class="fa-solid fa-fire text-red-500 mr-2"></i>熱門搶購</h3>
+                        <span class="text-xs text-sexify font-bold">查看更多</span>
+                    </div>
+                    <div class="flex space-x-4 overflow-x-auto px-5 no-scrollbar">
+                        <div class="flex-shrink-0 w-64 bg-white rounded-3xl overflow-hidden border">
+                            <div class="h-40 bg-gray-200"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=500" class="w-full h-full object-cover"></div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-gray-800">創作者限量版衛衣</h4>
+                                <p class="text-sexify font-black mt-2">$59.00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5">
+                    <h3 class="font-bold text-lg mb-4">為您推薦</h3>
+                    <div class="grid grid-cols-2 gap-4" id="dynamic-shop-grid"></div>
+                </div>
             </section>
 
             <section id="upload-tab" class="tab-content px-6 pt-4">
-                <h2 class="text-2xl font-black mb-6">發佈內容</h2>
-                <div id="drop-area" class="border-2 border-dashed border-red-200 rounded-[2rem] p-10 text-center bg-red-50/30" onclick="document.getElementById('file-input').click()">
-                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-sexify mb-4"></i>
-                    <p class="text-sm font-bold">選擇照片</p>
-                    <input type="file" id="file-input" class="hidden" accept="image/*" onchange="handleFileSelect(this)">
-                </div>
-                <div id="preview-container" class="hidden mt-4 relative rounded-2xl overflow-hidden">
-                    <img id="file-preview" class="w-full h-64 object-cover">
-                    <div id="upload-overlay" class="absolute inset-0 bg-black/60 hidden flex items-center justify-center text-white">
-                        <p>上傳中... <span id="progress-percent">0%</span></p>
+                <h2 class="text-2xl font-black mb-6">發佈至 Sexify</h2>
+                <div class="space-y-6">
+                    <div id="drop-area" class="border-2 border-dashed border-red-200 rounded-[2rem] p-10 text-center bg-red-50/30" onclick="document.getElementById('file-input').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-sexify mb-4"></i>
+                        <p class="text-sm font-bold text-gray-700">選擇影片或相片</p>
+                        <input type="file" id="file-input" class="hidden" accept="video/*,image/*" onchange="handleFileSelect(this)">
+                    </div>
+
+                    <div id="preview-container" class="hidden rounded-[2rem] overflow-hidden bg-gray-100 aspect-video relative border shadow-inner">
+                        <img id="file-preview" class="w-full h-full object-cover">
+                        <div id="upload-overlay" class="absolute inset-0 bg-black/70 hidden flex flex-col items-center justify-center text-white p-6 backdrop-blur-sm">
+                            <p class="text-sm mb-3 font-bold tracking-widest">正在傳送至 Sexify... <span id="progress-percent">0%</span></p>
+                            <div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden">
+                                <div id="progress-bar" class="upload-progress-bar bg-sexify h-full w-0"></div>
+                            </div>
+                        </div>
+                        <button onclick="resetUpload()" class="absolute top-3 right-3 bg-black/50 text-white p-2 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 border-b border-gray-100 py-3">
+                            <span class="text-xl font-black text-gray-400">$</span>
+                            <input id="post-price" type="number" class="w-full outline-none text-xl font-black" placeholder="設定價格 (0.00 為免費)">
+                        </div>
+                        <button onclick="startUpload()" class="w-full bg-sexify text-white font-bold py-5 rounded-2xl shadow-xl active:scale-95 transition">確認並上傳</button>
                     </div>
                 </div>
-                <button onclick="startUpload()" class="w-full bg-sexify text-white font-bold py-5 rounded-2xl mt-6">上傳至雲端</button>
             </section>
 
             <section id="profile-tab" class="tab-content">
-                <div class="bg-white px-6 pt-10 pb-6 border-b">
+                <div class="bg-white px-6 pt-6 pb-4 border-b">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-24 h-24 bg-gradient-to-tr from-red-600 to-rose-400 rounded-3xl p-1 shadow-lg">
+                        <div class="w-20 h-20 bg-gradient-to-tr from-red-600 to-purple-600 rounded-3xl p-1 shadow-lg">
                             <div class="w-full h-full bg-white rounded-2xl overflow-hidden flex items-center justify-center">
-                                <img src="https://i.pravatar.cc/150?u=me" class="w-full h-full object-cover">
+                                <i class="fa-solid fa-user text-3xl text-gray-200"></i>
                             </div>
                         </div>
                         <div class="flex space-x-2">
@@ -102,10 +203,12 @@
                         </div>
                     </div>
                     <h3 class="text-2xl font-black">Creator_Master</h3>
-                    <p class="text-xs text-gray-500 mb-4">✨ 這裡是我的私密生活分享</p>
+                    <p class="text-sm text-gray-400 mb-4 tracking-tight">Sexify 認證創作者</p>
+                    
                     <div class="flex space-x-8 text-center border-t pt-4">
-                        <div><p class="font-black text-lg">12</p><p class="text-[10px] text-gray-400 uppercase">貼文</p></div>
-                        <div><p class="font-black text-lg">5.2K</p><p class="text-[10px] text-gray-400 uppercase">粉絲</p></div>
+                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">粉絲</p></div>
+                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">訂閱</p></div>
+                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">獲讚</p></div>
                     </div>
                 </div>
 
@@ -114,28 +217,51 @@
                     <button onclick="toggleProfileView('my-stats')" id="btn-my-stats" class="flex-1 py-4 text-sm font-bold text-gray-400">數據分析</button>
                 </div>
 
-                <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5">
-                    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1 cursor-pointer" onclick="switchTab('upload-tab')">
+                <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
+                    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1">
                         <i class="fa-solid fa-plus text-xl"></i>
                     </div>
                 </div>
 
-                <div id="view-my-stats" class="hidden p-5 space-y-4">
-                    <div class="bg-black p-6 rounded-[2rem] text-white">
-                        <p class="text-[10px] opacity-60 uppercase font-bold tracking-widest">累積收益</p>
-                        <p class="text-sm opacity-40 line-through mt-2">$120.00</p> 
-                        <p class="text-4xl font-black text-sexify">$2,450.00</p>
+                <div id="view-my-stats" class="hidden p-5 space-y-6">
+                    <div class="grid grid-cols-2 gap-4 text-white">
+                        <div class="bg-black p-5 rounded-[2rem] shadow-xl">
+                            <p class="text-[10px] opacity-60 uppercase font-bold tracking-widest">總訂閱者</p>
+                            <p class="text-3xl font-black mt-2">0</p>
+                        </div>
+                        <div class="bg-sexify p-5 rounded-[2rem] shadow-xl">
+                            <p class="text-[10px] opacity-60 uppercase font-bold tracking-widest">累積收益</p>
+                            <p class="text-3xl font-black mt-2">$0</p>
+                        </div>
                     </div>
                 </div>
             </section>
+
         </main>
 
-        <footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t z-50">
+        <footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t safe-area-bottom z-50">
             <div class="flex justify-around items-center h-16">
-                <button onclick="switchTab('home-tab')" class="nav-btn text-sexify"><i class="fa-solid fa-house text-xl"></i></button>
-                <button onclick="switchTab('shop-tab')" class="nav-btn text-gray-300"><i class="fa-solid fa-store text-xl"></i></button>
-                <button onclick="switchTab('upload-tab')" class="nav-btn text-gray-300"><div class="w-12 h-12 bg-sexify text-white rounded-full flex items-center justify-center -mt-8 shadow-lg"><i class="fa-solid fa-plus text-xl"></i></div></button>
-                <button onclick="switchTab('profile-tab')" class="nav-btn text-gray-300"><i class="fa-solid fa-user text-xl"></i></button>
+                <button onclick="switchTab('home-tab')" class="nav-btn text-sexify flex flex-col items-center">
+                    <i class="fa-solid fa-house text-xl"></i>
+                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">首頁</span>
+                </button>
+                <button onclick="switchTab('search-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                    <i class="fa-solid fa-magnifying-glass text-xl"></i>
+                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">搜尋</span>
+                </button>
+                <button onclick="switchTab('upload-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                    <div class="w-12 h-12 bg-sexify text-white rounded-2xl flex items-center justify-center -mt-10 border-4 border-white shadow-xl rotate-45 transition active:scale-90">
+                        <i class="fa-solid fa-plus text-xl -rotate-45"></i>
+                    </div>
+                </button>
+                <button onclick="switchTab('shop-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                    <i class="fa-solid fa-store text-xl"></i>
+                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">商店</span>
+                </button>
+                <button onclick="switchTab('profile-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                    <i class="fa-solid fa-user text-xl"></i>
+                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">個人</span>
+                </button>
             </div>
         </footer>
     </div>
@@ -143,86 +269,118 @@
     <script>
         let selectedFile = null;
         const products = [
-            { name: "私人訂製影片", price: 99.0, oldPrice: 150.0, img: "https://picsum.photos/400/400?random=1" },
-            { name: "簽名拍立得", price: 45.0, oldPrice: 60.0, img: "https://picsum.photos/400/400?random=2" }
+            { name: "私人訂製影片", price: 99.00, img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500", tag: "HOT" },
+            { name: "限定簽名拍立得", price: 45.00, img: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=500", tag: "NEW" },
+            { name: "1對1 私訊解鎖", price: 29.99, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500", tag: "RECOM" },
+            { name: "創作者聯名香水", price: 120.00, img: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", tag: "LIMIT" }
         ];
 
         function renderShop() {
-            document.getElementById('dynamic-shop-grid').innerHTML = products.map(p => `
-                <div class="bg-white rounded-3xl overflow-hidden border shadow-sm">
-                    <img src="${p.img}" class="w-full aspect-square object-cover">
-                    <div class="p-4">
-                        <h4 class="font-bold text-xs">${p.name}</h4>
-                        <div class="flex items-center gap-2">
-                            <p class="text-sexify font-black">$${p.price}</p>
-                            <p class="text-[10px] text-gray-400 line-through">$${p.oldPrice}</p>
-                        </div>
+            const grid = document.getElementById('dynamic-shop-grid');
+            const shuffled = [...products].sort(() => 0.5 - Math.random());
+            grid.innerHTML = shuffled.map(p => `
+                <div class="bg-white rounded-[1.5rem] overflow-hidden border shadow-sm">
+                    <div class="aspect-square bg-gray-100"><img src="${p.img}" class="w-full h-full object-cover"></div>
+                    <div class="p-3">
+                        <div class="text-[9px] text-sexify font-black mb-1 tracking-tighter">${p.tag}</div>
+                        <h4 class="font-bold text-xs truncate text-gray-800">${p.name}</h4>
+                        <p class="text-sm font-black mt-1">$${p.price.toFixed(2)}</p>
                     </div>
                 </div>
             `).join('');
         }
 
         function verifyAge() {
-            document.getElementById('age-gate').classList.add('opacity-0');
+            document.getElementById('age-gate').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('age-gate').style.display = 'none';
-                document.getElementById('app-content').classList.remove('blur-2xl', 'pointer-events-none');
+                document.getElementById('app-content').classList.remove('blur-2xl');
+                document.getElementById('app-content').style.pointerEvents = 'auto';
                 renderShop();
             }, 500);
         }
 
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('text-sexify');
-                b.classList.add('text-gray-300');
-            });
-            event.currentTarget.classList.add('text-sexify');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-sexify', 'text-gray-300'));
+            event.currentTarget.classList.replace('text-gray-300', 'text-sexify');
+            if(tabId === 'shop-tab') renderShop();
+            window.scrollTo(0,0);
         }
 
         function toggleProfileView(view) {
-            const isPosts = view === 'my-posts';
-            document.getElementById('view-my-posts').classList.toggle('hidden', !isPosts);
-            document.getElementById('view-my-stats').classList.toggle('hidden', isPosts);
-            document.getElementById('btn-my-posts').className = isPosts ? "flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify" : "flex-1 py-4 text-sm font-bold text-gray-400";
-            document.getElementById('btn-my-stats').className = !isPosts ? "flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify" : "flex-1 py-4 text-sm font-bold text-gray-400";
+            const postBtn = document.getElementById('btn-my-posts');
+            const statBtn = document.getElementById('btn-my-stats');
+            const postView = document.getElementById('view-my-posts');
+            const statView = document.getElementById('view-my-stats');
+
+            if(view === 'my-posts') {
+                postView.classList.remove('hidden'); statView.classList.add('hidden');
+                postBtn.className = "flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify";
+                statBtn.className = "flex-1 py-4 text-sm font-bold text-gray-400";
+            } else {
+                postView.classList.add('hidden'); statView.classList.remove('hidden');
+                statBtn.className = "flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify";
+                postBtn.className = "flex-1 py-4 text-sm font-bold text-gray-400";
+            }
         }
 
-        function handleFileSelect(i) {
-            selectedFile = i.files[0];
-            const r = new FileReader();
-            r.onload = e => { 
-                document.getElementById('file-preview').src = e.target.result;
-                document.getElementById('preview-container').classList.remove('hidden');
-            };
-            r.readAsDataURL(selectedFile);
+        function handleFileSelect(input) {
+            selectedFile = input.files[0];
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('file-preview').src = e.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                    document.getElementById('drop-area').classList.add('hidden');
+                };
+                reader.readAsDataURL(selectedFile);
+            }
         }
 
         async function startUpload() {
-            if (!selectedFile) return alert("請選擇檔案");
+            if (!selectedFile) return alert("請先選擇要上傳的內容");
             const { storage, ref, uploadBytesResumable, getDownloadURL } = window.firebaseStorage;
-            const sRef = ref(storage, 'uploads/' + Date.now() + selectedFile.name);
-            const task = uploadBytesResumable(sRef, selectedFile);
+            const storageRef = ref(storage, 'sexify_uploads/' + Date.now() + '_' + selectedFile.name);
+            const uploadTask = uploadBytesResumable(storageRef, selectedFile);
             document.getElementById('upload-overlay').classList.remove('hidden');
 
-            task.on('state_changed', 
-                s => { document.getElementById('progress-percent').innerText = Math.round((s.bytesTransferred / s.totalBytes) * 100) + '%'; },
-                e => alert(e.message),
+            uploadTask.on('state_changed', 
+                (snap) => {
+                    const p = (snap.bytesTransferred / snap.totalBytes) * 100;
+                    document.getElementById('progress-bar').style.width = p + '%';
+                    document.getElementById('progress-percent').innerText = Math.round(p) + '%';
+                },
+                (err) => alert("上傳失敗：" + err.message),
                 async () => {
-                    const url = await getDownloadURL(task.snapshot.ref);
-                    const div = document.createElement('div');
-                    div.className = "aspect-square overflow-hidden rounded-lg";
-                    div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
-                    document.getElementById('view-my-posts').prepend(div);
-                    alert("上傳成功");
+                    const url = await getDownloadURL(uploadTask.snapshot.ref);
+                    addToGrid(url);
+                    alert("Sexify: 內容已成功上傳至雲端！");
+                    resetUpload();
                     switchTab('profile-tab');
                 }
             );
         }
 
+        function resetUpload() {
+            selectedFile = null;
+            document.getElementById('preview-container').classList.add('hidden');
+            document.getElementById('drop-area').classList.remove('hidden');
+            document.getElementById('upload-overlay').classList.add('hidden');
+            document.getElementById('file-input').value = "";
+        }
+
+        function addToGrid(url) {
+            const grid = document.getElementById('view-my-posts');
+            const div = document.createElement('div');
+            div.className = "aspect-square bg-gray-200 overflow-hidden rounded-md";
+            div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+            grid.prepend(div);
+        }
+
         function showPay() {
-            if(confirm("確認支付訂閱？")) {
+            if(confirm("確認支付 $9.99 訂閱此創作者？")) {
                 document.getElementById('post-img').classList.remove('blur-3xl');
                 document.getElementById('post-lock').classList.add('hidden');
             }

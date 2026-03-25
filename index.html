@@ -3,6 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sexify Premium | 會員系統</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+      // 新增 Auth 模組
+      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const storage = getStorage(app);
+      const auth = getAuth(app);
+
+      // 將方法綁定到 window，讓 HTML 按鈕可以呼叫
+      window.sexifyAuth = { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };
+      window.firebaseStorage = { storage, ref, uploadBytesResumable, getDownloadURL };
+
+      // 監聽登入狀態切換
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("用戶已登入:", user.email);
+          document.getElementById('auth-overlay').classList.add('hidden');
+          document.getElementById('user-display-name').innerText = user.email.split('@')[0];
+        } else {
+          console.log("用戶未登入");
+          document.getElementById('auth-overlay').classList.remove('hidden');
+        }
+      });
+    </script>
+
+    <style>
+        :root { --sexify: #e11d48; }
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: sans-serif; background-color: #fcfcfc; }
+        .bg-sexify { background-color: var(--sexify); }
+        .text-sexify { color: var(--sexify); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+
+    <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black">
+        <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-11/12 text-center">
+            <h2 class="text-4xl font-black mb-2 text-sexify tracking-tighter">SEXIFY</h2>
+            <p class="text-gray-400 mb-8 text-sm">確認您已年滿 18 歲以繼續</p>
+            <button onclick="verifyAge()" class="w-full bg-sexify text-white font-bold py-4 rounded-2xl shadow-lg">進入</button>
+        </div>
+    </div>
+
+    <div id="auth-overlay" class="hidden fixed inset-0 z-[90] flex items-center justify-center bg-white">
+        <div class="w-full max-w-sm px-8 text-center">
+            <h2 id="auth-mode-title" class="text-3xl font-black mb-2 text-gray-800">歡迎回來</h2>
+            <p id="auth-mode-desc" class="text-gray-400 text-sm mb-8">請登入您的 Sexify 帳號</p>
+            
+            <div class="space-y-4">
+                <input type="email" id="auth-email" placeholder="電子郵件" class="w-full bg-gray-100 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-red-500 outline-none">
+                <input type="password" id="auth-pw" placeholder="密碼 (至少 6 位)" class="w-full bg-gray-100 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-red-500 outline-none">
+                <button onclick="handleAuthAction()" id="auth-main-btn" class="w-full bg-sexify text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">登入</button>
+            </div>
+            
+            <p class="mt-8 text-sm text-gray-500">
+                <span id="auth-switch-text">還沒有帳號嗎？</span> 
+                <a href="#" onclick="toggleAuthMode()" id="auth-switch-link" class="text-sexify font-bold">立即註冊</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="app-content" class="filter blur-2xl transition-all duration-700 pointer-events-none">
+        <header class="sticky top-0 glass border-b z-40 px-5 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black text-sexify tracking-tighter">SEXIFY</h1>
+            <button onclick="handleLogout()" class="text-xs font-bold text-gray-400 uppercase">登出</button>
+        </header>
+
+        <main class="pb-32">
+            <section id="profile-tab" class="tab-content px-6 pt-6">
+                <h3 id="user-display-name" class="text-2xl font-black">載入中...</h3>
+                <p class="text-gray-400 text-sm">Sexify 會員</p>
+                </section>
+        </main>
+        
+        </div>
+
+    <script>
+        let isLoginMode = true;
+
+        // 1. 年齡驗證
+        function verifyAge() {
+            document.getElementById('age-gate').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('blur-2xl');
+            document.getElementById('app-content').style.pointerEvents = 'auto';
+            // 如果沒登入，會被 onAuthStateChanged 攔截並顯示 auth-overlay
+        }
+
+        // 2. 切換 登入/註冊 模式
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('auth-mode-title').innerText = isLoginMode ? "歡迎回來" : "建立帳號";
+            document.getElementById('auth-mode-desc').innerText = isLoginMode ? "請登入您的 Sexify 帳號" : "加入全球最強創作者社群";
+            document.getElementById('auth-main-btn').innerText = isLoginMode ? "登入" : "註冊";
+            document.getElementById('auth-switch-text').innerText = isLoginMode ? "還沒有帳號嗎？" : "已經有帳號了？";
+            document.getElementById('auth-switch-link').innerText = isLoginMode ? "立即註冊" : "登入帳號";
+        }
+
+        // 3. 處理登入或註冊
+        async function handleAuthAction() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-pw').value;
+            const { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = window.sexifyAuth;
+
+            if (!email || password.length < 6) return alert("請輸入正確的 Email 與至少 6 位密碼");
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    alert("登入成功！");
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    alert("註冊成功！歡迎來到 Sexify");
+                }
+            } catch (error) {
+                alert("錯誤: " + error.message);
+            }
+        }
+
+        // 4. 登出
+        async function handleLogout() {
+            if(confirm("確定要登出 Sexify 嗎？")) {
+                await window.sexifyAuth.signOut(window.sexifyAuth.auth);
+                location.reload();
+            }
+        }
+        
+        // 5. 沿用你原本的 switchTab, handleFileSelect, startUpload 等函數...
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Sexify Premium - 你的專屬私密空間</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">

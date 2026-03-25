@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sexify Premium - Creator Hub</title>
+    <title>Sexify Premium - Full Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+      // 這裡填寫你的 Firebase 專案配置
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "YOUR_SENDER_ID",
+        appId: "YOUR_APP_ID"
+      };
+
+      // 初始化 Firebase
+      const app = initializeApp(firebaseConfig);
+      const storage = getStorage(app);
+      window.firebaseStorage = { storage, ref, uploadBytesResumable, getDownloadURL };
+    </script>
+
     <style>
         ::-webkit-scrollbar { display: none; }
         body { 
@@ -17,6 +38,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .glass-morphism { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .upload-progress-bar { transition: width 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 overflow-x-hidden">
@@ -56,7 +78,7 @@
                                 <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full"></div>
                                 <div class="flex flex-col">
                                     <span class="font-bold text-sm">Premium_Creator_01</span>
-                                    <span class="text-xs text-gray-400">2 小時前</span>
+                                    <span class="text-xs text-gray-400">剛更新</span>
                                 </div>
                             </div>
                             <i class="fa-solid fa-ellipsis"></i>
@@ -68,21 +90,15 @@
                                 <button onclick="showPay()" class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-sm shadow-xl active:scale-95 transition">解鎖此貼文 $4.99</button>
                             </div>
                         </div>
-                        <div class="p-4 space-y-2">
-                            <div class="flex space-x-4 text-xl">
-                                <i class="fa-regular fa-heart"></i>
-                                <i class="fa-regular fa-comment"></i>
-                                <i class="fa-regular fa-bookmark"></i>
-                            </div>
-                            <p class="text-sm"><span class="font-bold">1,204 次贊</span></p>
-                            <p class="text-sm text-gray-600">這是專屬訂閱者的驚喜內容...</p>
-                        </div>
                     </div>
                 </div>
             </section>
 
             <section id="shop-tab" class="tab-content px-4 pt-4">
-                <h2 class="text-2xl font-black mb-6">實體商品商店</h2>
+                <div class="flex justify-between items-end mb-6">
+                    <h2 class="text-2xl font-black">官方商店</h2>
+                    <span class="text-blue-600 text-sm font-bold">查看全部</span>
+                </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border">
                         <div class="aspect-square bg-gray-200">
@@ -97,128 +113,97 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border">
-                        <div class="aspect-square bg-gray-200">
-                            <img src="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?w=500" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-3">
-                            <p class="text-xs text-blue-600 font-bold">數位收藏</p>
-                            <h3 class="font-bold text-sm truncate">私藏相冊實體版</h3>
-                            <div class="mt-2 flex justify-between items-center">
-                                <span class="font-black text-red-500">$45.00</span>
-                                <button class="bg-gray-100 p-2 rounded-full"><i class="fa-solid fa-cart-plus text-xs"></i></button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
 
             <section id="upload-tab" class="tab-content px-6 pt-4">
-                <h2 class="text-2xl font-black mb-6">發佈新內容</h2>
+                <h2 class="text-2xl font-black mb-6">發佈內容</h2>
                 <div class="space-y-6">
                     <div id="drop-area" class="border-2 border-dashed border-blue-300 rounded-3xl p-10 text-center bg-blue-50/50" onclick="document.getElementById('file-input').click()">
                         <i class="fa-solid fa-cloud-arrow-up text-4xl text-blue-400 mb-4"></i>
-                        <p class="text-sm font-bold text-blue-600">點擊或拖放影片/相片</p>
-                        <p class="text-xs text-gray-400 mt-2">支援 MP4, MOV, JPG, PNG</p>
+                        <p class="text-sm font-bold text-blue-600">選擇影片或相片</p>
                         <input type="file" id="file-input" class="hidden" accept="video/*,image/*" onchange="handleFileSelect(this)">
                     </div>
 
                     <div id="preview-container" class="hidden rounded-2xl overflow-hidden bg-gray-100 aspect-video relative">
                         <img id="file-preview" class="w-full h-full object-cover">
+                        <div id="upload-overlay" class="absolute inset-0 bg-black/60 hidden flex flex-col items-center justify-center text-white p-4">
+                            <p class="text-sm mb-2 font-bold">上傳中... <span id="progress-percent">0%</span></p>
+                            <div class="w-full bg-white/20 h-1 rounded-full overflow-hidden">
+                                <div id="progress-bar" class="upload-progress-bar bg-blue-500 h-full w-0"></div>
+                            </div>
+                        </div>
                         <button onclick="resetUpload()" class="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <div class="space-y-4">
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase">內容描述</label>
-                            <textarea class="w-full border-b focus:border-blue-500 outline-none py-2 text-sm" placeholder="寫點什麼吸引訂閱者..."></textarea>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-gray-400 uppercase">設定解鎖價格 (USD)</label>
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xl font-bold">$</span>
-                                <input type="number" class="w-full border-b focus:border-blue-500 outline-none py-2 text-xl font-black" placeholder="4.99">
-                            </div>
-                        </div>
-                        <button class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition">立即發佈內容</button>
+                        <input id="post-price" type="number" class="w-full border-b focus:border-blue-500 outline-none py-2 text-xl font-black" placeholder="設定價格 $0.00">
+                        <button onclick="startUpload()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition">確認並傳送到雲端</button>
                     </div>
                 </div>
             </section>
 
             <section id="stats-tab" class="tab-content px-5 pt-4">
-                <h2 class="text-2xl font-black mb-6">創作者數據</h2>
-                
+                <h2 class="text-2xl font-black mb-6">數據中心</h2>
                 <div class="grid grid-cols-2 gap-4 mb-8">
-                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 p-5 rounded-3xl text-white">
-                        <p class="text-xs opacity-80">總訂閱者</p>
-                        <p class="text-3xl font-black mt-1">12,842</p>
-                        <p class="text-[10px] mt-2 text-green-300"><i class="fa-solid fa-arrow-up"></i> 本月 +12%</p>
+                    <div class="bg-gray-900 p-5 rounded-3xl text-white">
+                        <p class="text-xs opacity-60">總訂閱者</p>
+                        <p class="text-3xl font-black mt-1">0</p>
                     </div>
                     <div class="bg-white p-5 rounded-3xl border shadow-sm">
-                        <p class="text-xs text-gray-400">本月預估收益</p>
-                        <p class="text-3xl font-black mt-1 text-gray-800">$4,250</p>
-                        <p class="text-[10px] mt-2 text-blue-500">結算日: 04/01</p>
+                        <p class="text-xs text-gray-400">總收益 (USD)</p>
+                        <p class="text-3xl font-black mt-1 text-gray-800">$0</p>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-3xl p-6 border shadow-sm mb-6">
-                    <h3 class="font-bold mb-4">內容觀看表現</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-600">總觀看次數</span>
-                            <span class="font-bold">452.1K</span>
-                        </div>
-                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-                            <div class="bg-blue-600 h-full w-[75%]"></div>
-                        </div>
+                    <h3 class="font-bold mb-4">觀看次數趨勢</h3>
+                    <div class="flex items-center justify-center h-32 bg-gray-50 rounded-2xl border border-dashed text-gray-400 text-xs">
+                        暫無數據顯示
                     </div>
                 </div>
 
                 <div class="bg-white rounded-3xl p-6 border shadow-sm">
-                    <h3 class="font-bold mb-4">最受歡迎內容類型</h3>
+                    <h3 class="font-bold mb-4">內容佔比分析</h3>
                     <div class="space-y-5">
                         <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-pink-100 text-pink-500 rounded-xl flex items-center justify-center">
-                                <i class="fa-solid fa-video"></i>
-                            </div>
                             <div class="flex-1">
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-bold">短影片內容</span>
-                                    <span class="text-xs text-gray-400">65% 佔比</span>
-                                </div>
-                                <div class="w-full bg-gray-100 h-1.5 rounded-full">
-                                    <div class="bg-pink-500 h-full w-[65%]"></div>
-                                </div>
+                                <div class="flex justify-between mb-1 text-xs"><span>短影片</span><span>0%</span></div>
+                                <div class="w-full bg-gray-100 h-1.5 rounded-full"><div class="bg-pink-500 h-full w-0"></div></div>
                             </div>
                         </div>
                         <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center">
-                                <i class="fa-solid fa-image"></i>
-                            </div>
                             <div class="flex-1">
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-bold">私密寫真</span>
-                                    <span class="text-xs text-gray-400">25% 佔比</span>
-                                </div>
-                                <div class="w-full bg-gray-100 h-1.5 rounded-full">
-                                    <div class="bg-blue-500 h-full w-[25%]"></div>
-                                </div>
+                                <div class="flex justify-between mb-1 text-xs"><span>私密寫真</span><span>0%</span></div>
+                                <div class="w-full bg-gray-100 h-1.5 rounded-full"><div class="bg-blue-500 h-full w-0"></div></div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="w-10 h-10 bg-purple-100 text-purple-500 rounded-xl flex items-center justify-center">
-                                <i class="fa-solid fa-comment-dots"></i>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm font-bold">1對1 私訊</span>
-                                    <span class="text-xs text-gray-400">10% 佔比</span>
-                                </div>
-                                <div class="w-full bg-gray-100 h-1.5 rounded-full">
-                                    <div class="bg-purple-500 h-full w-[10%]"></div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile-tab" class="tab-content">
+                <div class="relative h-48 bg-gradient-to-r from-blue-600 to-purple-600">
+                    <div class="absolute -bottom-10 left-6 flex items-end space-x-4">
+                        <div class="w-24 h-24 bg-white p-1 rounded-3xl shadow-xl">
+                            <div class="w-full h-full bg-gray-200 rounded-[22px]"></div>
                         </div>
+                        <div class="pb-2">
+                            <h3 class="font-black text-xl">My_Profile</h3>
+                            <p class="text-xs text-gray-500">ID: 8827104</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16 px-6 flex space-x-8 border-b">
+                    <button class="pb-4 border-b-2 border-blue-600 font-bold text-sm">我的發佈</button>
+                    <button class="pb-4 text-gray-400 font-bold text-sm">已購內容</button>
+                    <button class="pb-4 text-gray-400 font-bold text-sm">收藏</button>
+                </div>
+
+                <div class="p-1 grid grid-cols-3 gap-1" id="my-uploads-grid">
+                    <div class="aspect-square bg-gray-100 flex items-center justify-center text-gray-300">
+                        <i class="fa-solid fa-plus text-xl"></i>
                     </div>
                 </div>
             </section>
@@ -244,7 +229,7 @@
                     <i class="fa-solid fa-chart-line text-xl"></i>
                     <span class="text-[10px] mt-1 font-bold">數據</span>
                 </button>
-                <button class="text-gray-400 flex flex-col items-center">
+                <button onclick="switchTab('profile-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
                     <i class="fa-solid fa-user text-xl"></i>
                     <span class="text-[10px] mt-1 font-bold">個人</span>
                 </button>
@@ -253,13 +238,13 @@
     </div>
 
     <script>
-        // 年齡驗證
+        let selectedFile = null;
+
         function verifyAge() {
             document.getElementById('age-gate').style.display = 'none';
             document.getElementById('app-content').classList.remove('blur-2xl');
         }
 
-        // 解鎖貼文 (保留原始邏輯)
         function showPay() {
             if(confirm("確認支付 $4.99 觀看內容？")) {
                 document.getElementById('post-img').classList.remove('blur-3xl');
@@ -267,47 +252,80 @@
             }
         }
 
-        // 分頁切換邏輯
         function switchTab(tabId) {
-            // 隱藏所有分頁
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            // 顯示目標分頁
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             
-            // 更新按鈕顏色
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.replace('text-blue-600', 'text-gray-400');
-            });
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-blue-600', 'text-gray-400'));
             event.currentTarget.classList.replace('text-gray-400', 'text-blue-600');
-            
-            // 捲動回頂部
             window.scrollTo(0,0);
         }
 
-        // 上傳預覽處理
+        // 檔案選擇
         function handleFileSelect(input) {
-            const file = input.files[0];
-            if (file) {
+            selectedFile = input.files[0];
+            if (selectedFile) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    const container = document.getElementById('preview-container');
-                    const img = document.getElementById('file-preview');
-                    const dropArea = document.getElementById('drop-area');
-                    
-                    img.src = e.target.result;
-                    container.classList.remove('hidden');
-                    dropArea.classList.add('hidden');
-                }
-                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    document.getElementById('file-preview').src = e.target.result;
+                    document.getElementById('preview-container').classList.remove('hidden');
+                    document.getElementById('drop-area').classList.add('hidden');
+                };
+                reader.readAsDataURL(selectedFile);
             }
         }
 
         function resetUpload() {
+            selectedFile = null;
             document.getElementById('preview-container').classList.add('hidden');
             document.getElementById('drop-area').classList.remove('hidden');
-            document.getElementById('file-input').value = '';
+            document.getElementById('upload-overlay').classList.add('hidden');
+        }
+
+        // Firebase 上傳邏輯
+        async function startUpload() {
+            if (!selectedFile) return alert("請先選擇檔案");
+            if (!window.firebaseStorage) return alert("Firebase 未配置，請檢查程式碼開頭的 Config");
+
+            const { storage, ref, uploadBytesResumable, getDownloadURL } = window.firebaseStorage;
+            const storageRef = ref(storage, 'uploads/' + Date.now() + '_' + selectedFile.name);
+            const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
+            document.getElementById('upload-overlay').classList.remove('hidden');
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    document.getElementById('progress-bar').style.width = progress + '%';
+                    document.getElementById('progress-percent').innerText = Math.round(progress) + '%';
+                }, 
+                (error) => {
+                    alert("上傳失敗: " + error.message);
+                    resetUpload();
+                }, 
+                async () => {
+                    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                    addToProfileGrid(downloadURL, selectedFile.type.includes('video'));
+                    alert("發佈成功！已傳送到雲端。");
+                    resetUpload();
+                    switchTab('profile-tab');
+                }
+            );
+        }
+
+        // 動態新增到個人頁面
+        function addToProfileGrid(url, isVideo) {
+            const grid = document.getElementById('my-uploads-grid');
+            const div = document.createElement('div');
+            div.className = "aspect-square bg-gray-200 relative overflow-hidden";
+            
+            if(isVideo) {
+                div.innerHTML = `<video src="${url}" class="w-full h-full object-cover"></video>
+                                 <i class="fa-solid fa-play absolute top-2 right-2 text-white text-[10px]"></i>`;
+            } else {
+                div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+            }
+            grid.prepend(div);
         }
     </script>
 </body>

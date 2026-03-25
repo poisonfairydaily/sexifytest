@@ -219,11 +219,41 @@
                     <button onclick="toggleProfileView('my-stats')" id="btn-my-stats" class="flex-1 py-4 text-sm font-bold text-gray-400">數據分析</button>
                 </div>
 
-                <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
-                    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1 active:border-sexify active:text-sexify cursor-pointer transition">
-                        <i class="fa-solid fa-plus text-xl"></i>
-                    </div>
-                </div>
+               <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
+    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1 active:scale-95 transition cursor-pointer">
+        <i class="fa-solid fa-plus text-xl"></i>
+    </div>
+
+    <div class="relative aspect-square overflow-hidden group cursor-pointer">
+        <img src="https://picsum.photos/400/400?random=10" class="w-full h-full object-cover brightness-75 group-hover:scale-110 transition duration-500">
+        <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+            <i class="fa-solid fa-lock text-white text-xl drop-shadow-md"></i>
+        </div>
+        <div class="absolute bottom-1 left-1 text-[10px] text-white font-bold flex items-center gap-1">
+            <i class="fa-solid fa-play text-[8px]"></i> 1.2K
+        </div>
+    </div>
+
+    <div class="relative aspect-square overflow-hidden group cursor-pointer">
+        <img src="https://picsum.photos/400/400?random=11" class="w-full h-full object-cover brightness-90 group-hover:scale-110 transition duration-500">
+        <div class="absolute top-1 right-1 bg-sexify text-white text-[8px] px-1.5 py-0.5 rounded-md font-black shadow-lg">
+            $5.99
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center bg-black/10">
+            <i class="fa-solid fa-image text-white text-xl opacity-80"></i>
+        </div>
+    </div>
+
+    <div class="relative aspect-square overflow-hidden">
+        <img src="https://picsum.photos/400/400?random=12" class="w-full h-full object-cover">
+    </div>
+    <div class="relative aspect-square overflow-hidden">
+        <img src="https://picsum.photos/400/400?random=13" class="w-full h-full object-cover">
+    </div>
+    <div class="relative aspect-square overflow-hidden">
+        <img src="https://picsum.photos/400/400?random=14" class="w-full h-full object-cover">
+    </div>
+</div>
 
                 <div id="view-my-stats" class="hidden p-5 space-y-6">
                     <div class="grid grid-cols-2 gap-4 text-white">

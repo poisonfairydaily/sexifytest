@@ -189,71 +189,39 @@
                 </div>
             </section>
 
-<section id="profile-tab" class="tab-content px-6 pt-10"> <div class="bg-white px-6 pt-6 pb-4 border-b rounded-3xl shadow-sm mb-6"> <div class="flex justify-between items-start mb-6">
-                        <div class="relative w-24 h-24 bg-gradient-to-tr from-rose-500 to-orange-400 rounded-3xl p-1 shadow-lg cursor-pointer" onclick="triggerAvatarUpload()">
+            <section id="profile-tab" class="tab-content">
+                <div class="bg-white px-6 pt-6 pb-4 border-b">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-tr from-red-600 to-purple-600 rounded-3xl p-1 shadow-lg">
                             <div class="w-full h-full bg-white rounded-2xl overflow-hidden flex items-center justify-center">
-                                <img id="profile-avatar" src="https://i.pravatar.cc/300?u=creator_master" class="w-full h-full object-cover">
-                                </div>
-                            <div class="absolute -bottom-2 -right-2 bg-white w-7 h-7 rounded-full flex items-center justify-center shadow-md border border-gray-100">
-                                <i class="fa-solid fa-pen text-gray-500 text-xs"></i>
+                                <i class="fa-solid fa-user text-3xl text-gray-200"></i>
                             </div>
                         </div>
-
-                        <input type="file" id="profile-avatar-input" class="hidden" accept="image/*" onchange="previewProfileAvatar(event)">
-
                         <div class="flex space-x-2">
-                            <button class="bg-gray-100 px-4 py-2 rounded-xl text-xs font-bold active:bg-gray-200 transition">編輯資料</button>
-                            <button class="bg-black text-white px-4 py-2 rounded-xl text-xs font-bold active:opacity-80 transition"><i class="fa-solid fa-share"></i></button>
+                            <button class="bg-gray-100 px-4 py-2 rounded-xl text-xs font-bold">編輯資料</button>
+                            <button class="bg-black text-white px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-share"></i></button>
                         </div>
                     </div>
-                    <h3 class="text-2xl font-black text-gray-800">Creator_Master</h3> <p class="text-sm text-gray-400 mb-4 tracking-tight">Sexify 認證創作者</p>
+                    <h3 class="text-2xl font-black">Creator_Master</h3>
+                    <p class="text-sm text-gray-400 mb-4 tracking-tight">Sexify 認證創作者</p>
                     
                     <div class="flex space-x-8 text-center border-t pt-4">
-                        <div><p class="font-black text-lg text-gray-800">0</p><p class="text-[10px] text-gray-400 uppercase">粉絲</p></div>
-                        <div><p class="font-black text-lg text-gray-800">0</p><p class="text-[10px] text-gray-400 uppercase">訂閱</p></div>
-                        <div><p class="font-black text-lg text-gray-800">0</p><p class="text-[10px] text-gray-400 uppercase">獲讚</p></div>
+                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">粉絲</p></div>
+                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">訂閱</p></div>
+                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">獲讚</p></div>
                     </div>
                 </div>
 
-                <div class="sticky top-[64px] bg-white z-30 flex border-b rounded-t-2xl"> <button onclick="toggleProfileView('my-posts')" id="btn-my-posts" class="flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify">我的發佈</button>
+                <div class="sticky top-[64px] bg-white z-30 flex border-b">
+                    <button onclick="toggleProfileView('my-posts')" id="btn-my-posts" class="flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify">我的發佈</button>
                     <button onclick="toggleProfileView('my-stats')" id="btn-my-stats" class="flex-1 py-4 text-sm font-bold text-gray-400">數據分析</button>
                 </div>
 
-               <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
-    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1 active:scale-95 transition cursor-pointer">
-        <i class="fa-solid fa-plus text-xl"></i>
-    </div>
-
-    <div class="relative aspect-square overflow-hidden group cursor-pointer">
-        <img src="https://picsum.photos/400/400?random=10" class="w-full h-full object-cover brightness-75 group-hover:scale-110 transition duration-500">
-        <div class="absolute inset-0 flex items-center justify-center bg-black/20">
-            <i class="fa-solid fa-lock text-white text-xl drop-shadow-md"></i>
-        </div>
-        <div class="absolute bottom-1 left-1 text-[10px] text-white font-bold flex items-center gap-1">
-            <i class="fa-solid fa-play text-[8px]"></i> 1.2K
-        </div>
-    </div>
-
-    <div class="relative aspect-square overflow-hidden group cursor-pointer">
-        <img src="https://picsum.photos/400/400?random=11" class="w-full h-full object-cover brightness-90 group-hover:scale-110 transition duration-500">
-        <div class="absolute top-1 right-1 bg-sexify text-white text-[8px] px-1.5 py-0.5 rounded-md font-black shadow-lg">
-            $5.99
-        </div>
-        <div class="absolute inset-0 flex items-center justify-center bg-black/10">
-            <i class="fa-solid fa-image text-white text-xl opacity-80"></i>
-        </div>
-    </div>
-
-    <div class="relative aspect-square overflow-hidden">
-        <img src="https://picsum.photos/400/400?random=12" class="w-full h-full object-cover">
-    </div>
-    <div class="relative aspect-square overflow-hidden">
-        <img src="https://picsum.photos/400/400?random=13" class="w-full h-full object-cover">
-    </div>
-    <div class="relative aspect-square overflow-hidden">
-        <img src="https://picsum.photos/400/400?random=14" class="w-full h-full object-cover">
-    </div>
-</div>
+                <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
+                    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1">
+                        <i class="fa-solid fa-plus text-xl"></i>
+                    </div>
+                </div>
 
                 <div id="view-my-stats" class="hidden p-5 space-y-6">
                     <div class="grid grid-cols-2 gap-4 text-white">
@@ -418,67 +386,5 @@
             }
         }
     </script>
-    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
-
-    <script>
-        // --- 個人檔案分頁切換邏輯 ---
-        function toggleProfileView(view) {
-            const posts = document.getElementById('view-my-posts');
-            const stats = document.getElementById('view-my-stats');
-            const btnPosts = document.getElementById('btn-my-posts');
-            const btnStats = document.getElementById('btn-my-stats');
-
-            if (view === 'my-posts') {
-                posts.classList.remove('hidden');
-                stats.classList.add('hidden');
-                // 切換按鈕樣式
-                btnPosts.classList.add('border-b-2', 'border-sexify', 'text-sexify');
-                btnPosts.classList.remove('text-gray-400');
-                btnStats.classList.remove('border-b-2', 'border-sexify', 'text-sexify');
-                btnStats.classList.add('text-gray-400');
-            } else {
-                posts.classList.add('hidden');
-                stats.classList.remove('hidden');
-                // 切換按鈕樣式
-                btnStats.classList.add('border-b-2', 'border-sexify', 'text-sexify');
-                btnStats.classList.remove('text-gray-400');
-                btnPosts.classList.remove('border-b-2', 'border-sexify', 'text-sexify');
-                btnPosts.classList.add('text-gray-400');
-            }
-        }
-
-        // --- 更換頭像邏輯 ---
-        function triggerAvatarUpload() {
-            document.getElementById('profile-avatar-input').click();
-        }
-
-        function previewProfileAvatar(event) {
-            const reader = new FileReader();
-            const file = event.target.files[0];
-            if (file) {
-                reader.onload = function() {
-                    document.getElementById('profile-avatar').src = reader.result;
-                }
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // --- 全域分頁切換 (如果你原本就有這段，請保留或整合) ---
-        function switchTab(tabId) {
-            // 隱藏所有 tab
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-                tab.style.display = 'none';
-            });
-            // 顯示點選的 tab
-            const activeTab = document.getElementById(tabId);
-            if (activeTab) {
-                activeTab.classList.add('active');
-                activeTab.style.display = 'block';
-            }
-        }
-    </script>
-</body>
-</html>
 </body>
 </html>

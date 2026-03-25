@@ -207,6 +207,15 @@
                         </div>
                     </div>
                     <h3 class="text-2xl font-black text-gray-800">Creator_Master</h3> <p class="text-sm text-gray-400 mb-4 tracking-tight">Sexify 認證創作者</p>
+    <p class="text-xs text-gray-600 leading-relaxed mb-4">
+    📸 捕捉每一刻的性感與真實 | 台北<br>
+    ✨ 每週五更新專屬內容，感謝支持！
+</p>
+<div class="flex gap-3 mb-6">
+    <a href="#" class="text-gray-400 hover:text-sexify"><i class="fa-brands fa-twitter"></i></a>
+    <a href="#" class="text-gray-400 hover:text-sexify"><i class="fa-brands fa-instagram"></i></a>
+    <a href="#" class="text-gray-400 hover:text-sexify"><i class="fa-solid fa-link text-[10px]"></i></a>
+</div>
                     
                     <div class="flex space-x-8 text-center border-t pt-4">
                         <div><p class="font-black text-lg text-gray-800">0</p><p class="text-[10px] text-gray-400 uppercase">粉絲</p></div>
@@ -219,10 +228,10 @@
                     <button onclick="toggleProfileView('my-stats')" id="btn-my-stats" class="flex-1 py-4 text-sm font-bold text-gray-400">數據分析</button>
                 </div>
 
-               <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
-    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1 active:scale-95 transition cursor-pointer">
-        <i class="fa-solid fa-plus text-xl"></i>
-    </div>
+               <div onclick="switchTab('upload-tab')" class="aspect-square bg-rose-50 flex flex-col items-center justify-center text-sexify border-2 border-dashed border-rose-200 rounded-lg m-1 active:scale-95 transition cursor-pointer">
+    <i class="fa-solid fa-plus text-xl mb-1"></i>
+    <span class="text-[9px] font-bold">新動態</span>
+</div>
 
     <div class="relative aspect-square overflow-hidden group cursor-pointer">
         <img src="https://picsum.photos/400/400?random=10" class="w-full h-full object-cover brightness-75 group-hover:scale-110 transition duration-500">

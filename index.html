@@ -1,178 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyAqBfRZov_T8yS_LhCdbxcwGZB6BrOoxu0",
-  authDomain: "sexify-c6a65.firebaseapp.com",
-  projectId: "sexify-c6a65",
-  storageBucket: "sexify-c6a65.firebasestorage.app",
-  messagingSenderId: "541444039016",
-  appId: "1:541444039016:web:b976009e79a42acdb476dd",
-  measurementId: "G-6PSFRCCLP5"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sexify Premium | 會員系統</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
-    
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-      // 新增 Auth 模組
-      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-      const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "YOUR_PROJECT.firebaseapp.com",
-        projectId: "YOUR_PROJECT_ID",
-        storageBucket: "YOUR_PROJECT.appspot.com",
-        messagingSenderId: "YOUR_SENDER_ID",
-        appId: "YOUR_APP_ID"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const storage = getStorage(app);
-      const auth = getAuth(app);
-
-      // 將方法綁定到 window，讓 HTML 按鈕可以呼叫
-      window.sexifyAuth = { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };
-      window.firebaseStorage = { storage, ref, uploadBytesResumable, getDownloadURL };
-
-      // 監聽登入狀態切換
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          console.log("用戶已登入:", user.email);
-          document.getElementById('auth-overlay').classList.add('hidden');
-          document.getElementById('user-display-name').innerText = user.email.split('@')[0];
-        } else {
-          console.log("用戶未登入");
-          document.getElementById('auth-overlay').classList.remove('hidden');
-        }
-      });
-    </script>
-
-    <style>
-        :root { --sexify: #e11d48; }
-        ::-webkit-scrollbar { display: none; }
-        body { font-family: sans-serif; background-color: #fcfcfc; }
-        .bg-sexify { background-color: var(--sexify); }
-        .text-sexify { color: var(--sexify); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-    </style>
-</head>
-<body>
-
-    <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black">
-        <div class="bg-white p-8 rounded-[2.5rem] max-w-sm w-11/12 text-center">
-            <h2 class="text-4xl font-black mb-2 text-sexify tracking-tighter">SEXIFY</h2>
-            <p class="text-gray-400 mb-8 text-sm">確認您已年滿 18 歲以繼續</p>
-            <button onclick="verifyAge()" class="w-full bg-sexify text-white font-bold py-4 rounded-2xl shadow-lg">進入</button>
-        </div>
-    </div>
-
-    <div id="auth-overlay" class="hidden fixed inset-0 z-[90] flex items-center justify-center bg-white">
-        <div class="w-full max-w-sm px-8 text-center">
-            <h2 id="auth-mode-title" class="text-3xl font-black mb-2 text-gray-800">歡迎回來</h2>
-            <p id="auth-mode-desc" class="text-gray-400 text-sm mb-8">請登入您的 Sexify 帳號</p>
-            
-            <div class="space-y-4">
-                <input type="email" id="auth-email" placeholder="電子郵件" class="w-full bg-gray-100 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-red-500 outline-none">
-                <input type="password" id="auth-pw" placeholder="密碼 (至少 6 位)" class="w-full bg-gray-100 border-none rounded-xl py-4 px-6 focus:ring-2 focus:ring-red-500 outline-none">
-                <button onclick="handleAuthAction()" id="auth-main-btn" class="w-full bg-sexify text-white font-bold py-4 rounded-xl shadow-lg active:scale-95 transition">登入</button>
-            </div>
-            
-            <p class="mt-8 text-sm text-gray-500">
-                <span id="auth-switch-text">還沒有帳號嗎？</span> 
-                <a href="#" onclick="toggleAuthMode()" id="auth-switch-link" class="text-sexify font-bold">立即註冊</a>
-            </p>
-        </div>
-    </div>
-
-    <div id="app-content" class="filter blur-2xl transition-all duration-700 pointer-events-none">
-        <header class="sticky top-0 glass border-b z-40 px-5 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black text-sexify tracking-tighter">SEXIFY</h1>
-            <button onclick="handleLogout()" class="text-xs font-bold text-gray-400 uppercase">登出</button>
-        </header>
-
-        <main class="pb-32">
-            <section id="profile-tab" class="tab-content px-6 pt-6">
-                <h3 id="user-display-name" class="text-2xl font-black">載入中...</h3>
-                <p class="text-gray-400 text-sm">Sexify 會員</p>
-                </section>
-        </main>
-        
-        </div>
-
-    <script>
-        let isLoginMode = true;
-
-        // 1. 年齡驗證
-        function verifyAge() {
-            document.getElementById('age-gate').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('blur-2xl');
-            document.getElementById('app-content').style.pointerEvents = 'auto';
-            // 如果沒登入，會被 onAuthStateChanged 攔截並顯示 auth-overlay
-        }
-
-        // 2. 切換 登入/註冊 模式
-        function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('auth-mode-title').innerText = isLoginMode ? "歡迎回來" : "建立帳號";
-            document.getElementById('auth-mode-desc').innerText = isLoginMode ? "請登入您的 Sexify 帳號" : "加入全球最強創作者社群";
-            document.getElementById('auth-main-btn').innerText = isLoginMode ? "登入" : "註冊";
-            document.getElementById('auth-switch-text').innerText = isLoginMode ? "還沒有帳號嗎？" : "已經有帳號了？";
-            document.getElementById('auth-switch-link').innerText = isLoginMode ? "立即註冊" : "登入帳號";
-        }
-
-        // 3. 處理登入或註冊
-        async function handleAuthAction() {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-pw').value;
-            const { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword } = window.sexifyAuth;
-
-            if (!email || password.length < 6) return alert("請輸入正確的 Email 與至少 6 位密碼");
-
-            try {
-                if (isLoginMode) {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    alert("登入成功！");
-                } else {
-                    await createUserWithEmailAndPassword(auth, email, password);
-                    alert("註冊成功！歡迎來到 Sexify");
-                }
-            } catch (error) {
-                alert("錯誤: " + error.message);
-            }
-        }
-
-        // 4. 登出
-        async function handleLogout() {
-            if(confirm("確定要登出 Sexify 嗎？")) {
-                await window.sexifyAuth.signOut(window.sexifyAuth.auth);
-                location.reload();
-            }
-        }
-        
-        // 5. 沿用你原本的 switchTab, handleFileSelect, startUpload 等函數...
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sexify Premium - 你的專屬私密空間</title>
+    <title>Sexify Premium - The Ultimate Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
     
@@ -200,40 +31,31 @@ const analytics = getAnalytics(app);
             -webkit-tap-highlight-color: transparent; 
             user-select: none; 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fcfcfc;
+            background-color: #f9fafb;
         }
-        /* Sexify 品牌色彩 */
-        :root { --sexify-main: #e11d48; }
-        .text-sexify { color: var(--sexify-main); }
-        .bg-sexify { background-color: var(--sexify-main); }
-        .border-sexify { border-color: var(--sexify-main); }
-
         .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .category-chip.active { background-color: var(--sexify-main); color: white; border-color: var(--sexify-main); }
+        .category-chip.active { background-color: #2563eb; color: white; border-color: #2563eb; }
         .upload-progress-bar { transition: width 0.3s ease; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* 玻璃效果導航 */
-        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
 
-    <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black transition-opacity duration-500">
+    <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black">
         <div class="bg-white p-8 rounded-3xl max-w-sm w-11/12 text-center shadow-2xl">
-            <h2 class="text-3xl font-black mb-2 text-sexify tracking-tighter">SEXIFY</h2>
-            <p class="text-gray-500 mb-8 text-sm">此平台包含成人內容，進入即代表您已滿 18 歲。</p>
-            <button onclick="verifyAge()" class="w-full bg-sexify text-white font-bold py-4 rounded-2xl mb-4 shadow-lg active:scale-95 transition">進入專屬空間</button>
+            <h2 class="text-2xl font-black mb-6">🔞 內容確認</h2>
+            <p class="text-gray-500 mb-6 text-sm">此平台包含成人內容，您必須年滿 18 歲才能進入。</p>
+            <button onclick="verifyAge()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl mb-4 shadow-lg active:scale-95 transition">進入專屬空間</button>
             <button onclick="window.location.href='https://google.com'" class="text-gray-400 text-sm">我未滿 18 歲</button>
         </div>
     </div>
 
-    <div id="app-content" class="filter blur-2xl transition-all duration-500 pointer-events-none">
+    <div id="app-content" class="filter blur-2xl transition-all duration-500">
         
-        <header class="sticky top-0 glass-header border-b z-40 px-5 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-black tracking-tighter text-sexify">SEX<span class="text-black">IFY</span></h1>
+        <header class="sticky top-0 bg-white/80 backdrop-blur-md border-b z-40 px-5 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-tighter text-blue-600">Sexify</h1>
             <div class="flex space-x-5">
                 <i class="fa-regular fa-comment-dots text-xl text-gray-700"></i>
                 <i class="fa-regular fa-bell text-xl text-gray-700"></i>
@@ -244,28 +66,28 @@ const analytics = getAnalytics(app);
             
             <section id="home-tab" class="tab-content active">
                 <div class="flex space-x-4 overflow-x-auto p-4 no-scrollbar">
-                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-red-500 p-0.5"><div class="w-full h-full bg-gradient-to-tr from-orange-400 to-red-600 rounded-full border-2 border-white"></div></div>
-                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-gray-200 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full border-2 border-white"></div></div>
-                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-gray-200 p-0.5"><div class="w-full h-full bg-gray-100 rounded-full border-2 border-white"></div></div>
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-pink-500 p-0.5"><div class="w-full h-full bg-gradient-to-tr from-yellow-400 to-purple-600 rounded-full"></div></div>
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-blue-500 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-gray-200 p-0.5"><div class="w-full h-full bg-gray-100 rounded-full"></div></div>
                 </div>
 
                 <div class="space-y-6">
                     <div class="bg-white border-y">
                         <div class="p-4 flex items-center justify-between">
                             <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-purple-600 rounded-full"></div>
+                                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full"></div>
                                 <div class="flex flex-col">
-                                    <span class="font-bold text-sm text-gray-800">Hot_Creator_99</span>
-                                    <span class="text-[10px] text-sexify font-bold uppercase tracking-widest">Premium</span>
+                                    <span class="font-bold text-sm">Hot_Creator_99</span>
+                                    <span class="text-xs text-gray-400">推薦貼文</span>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-ellipsis-h text-gray-300"></i>
+                            <i class="fa-solid fa-ellipsis"></i>
                         </div>
-                        <div class="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+                        <div class="relative aspect-[4/5] bg-gray-100">
                             <img id="post-img" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1000" class="w-full h-full object-cover blur-3xl transition-all duration-1000">
                             <div id="post-lock" class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white backdrop-blur-md">
-                                <div class="bg-white/20 p-6 rounded-full mb-4 border border-white/30"><i class="fa-solid fa-lock text-3xl"></i></div>
-                                <button onclick="showPay()" class="bg-sexify text-white px-10 py-4 rounded-full font-bold text-sm shadow-2xl active:scale-95 transition">訂閱以查看 $9.99/月</button>
+                                <i class="fa-solid fa-lock mb-3 text-4xl"></i>
+                                <button onclick="showPay()" class="bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-sm shadow-2xl active:scale-95 transition">訂閱以查看 $9.99/月</button>
                             </div>
                         </div>
                     </div>
@@ -275,83 +97,97 @@ const analytics = getAnalytics(app);
             <section id="search-tab" class="tab-content px-5 pt-4">
                 <div class="relative mb-6">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" placeholder="搜尋創作者或關鍵字..." class="w-full bg-gray-100 py-4 pl-12 pr-4 rounded-2xl outline-none focus:ring-2 ring-red-500 transition">
+                    <input type="text" placeholder="搜尋創作者或關鍵字..." class="w-full bg-gray-100 py-4 pl-12 pr-4 rounded-2xl outline-none focus:ring-2 ring-blue-500 transition">
                 </div>
+
                 <div class="flex space-x-2 overflow-x-auto no-scrollbar mb-8">
                     <button class="category-chip active flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">全部</button>
                     <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">Cosplay</button>
                     <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">POV</button>
                     <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">ASMR</button>
+                    <button class="category-chip flex-shrink-0 px-5 py-2 rounded-full border border-gray-200 text-sm font-bold">健身</button>
                 </div>
-                <h3 class="font-black text-lg mb-4">推薦創作者</h3>
+
+                <h3 class="font-black text-lg mb-4">熱門創作者</h3>
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-white p-5 rounded-[2rem] border shadow-sm text-center">
-                        <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 border-4 border-red-50"></div>
+                    <div class="bg-white p-4 rounded-3xl border shadow-sm text-center">
+                        <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 border-4 border-blue-50"></div>
                         <p class="font-bold text-sm">Lily_Rose</p>
-                        <p class="text-[10px] text-sexify mb-3">#POV #Sweet</p>
-                        <button class="w-full bg-black text-white py-2 rounded-xl text-xs font-bold">關注</button>
+                        <p class="text-[10px] text-blue-600 mb-3">#POV #Sweet</p>
+                        <button class="w-full bg-gray-900 text-white py-2 rounded-xl text-xs font-bold">關注</button>
                     </div>
-                    <div class="bg-white p-5 rounded-[2rem] border shadow-sm text-center">
-                        <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 border-4 border-purple-50"></div>
+                    <div class="bg-white p-4 rounded-3xl border shadow-sm text-center">
+                        <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-3 border-4 border-pink-50"></div>
                         <p class="font-bold text-sm">Dark_Queen</p>
-                        <p class="text-[10px] text-purple-600 mb-3">#Cosplay #BDSM</p>
-                        <button class="w-full bg-black text-white py-2 rounded-xl text-xs font-bold">關注</button>
+                        <p class="text-[10px] text-pink-600 mb-3">#Cosplay #BDSM</p>
+                        <button class="w-full bg-gray-900 text-white py-2 rounded-xl text-xs font-bold">關注</button>
                     </div>
                 </div>
             </section>
 
             <section id="shop-tab" class="tab-content">
                 <div class="px-5 pt-4">
-                    <h2 class="text-3xl font-black mb-1">SEXIFY 商店</h2>
-                    <p class="text-gray-400 text-xs mb-6 uppercase tracking-widest">Exclusive Merch</p>
+                    <h2 class="text-3xl font-black mb-2">商店</h2>
+                    <p class="text-gray-400 text-xs mb-6">根據您的喜好挑選的專屬商品</p>
                 </div>
+
                 <div class="mb-8">
                     <div class="px-5 flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg"><i class="fa-solid fa-fire text-red-500 mr-2"></i>熱門搶購</h3>
-                        <span class="text-xs text-sexify font-bold">查看更多</span>
+                        <h3 class="font-bold text-lg"><i class="fa-solid fa-fire text-orange-500 mr-2"></i>熱門搶購</h3>
+                        <span class="text-xs text-blue-600">查看更多</span>
                     </div>
                     <div class="flex space-x-4 overflow-x-auto px-5 no-scrollbar">
                         <div class="flex-shrink-0 w-64 bg-white rounded-3xl overflow-hidden border">
-                            <div class="h-40 bg-gray-200"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=500" class="w-full h-full object-cover"></div>
+                            <div class="h-40 bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=500" class="w-full h-full object-cover">
+                            </div>
                             <div class="p-4">
-                                <h4 class="font-bold text-gray-800">創作者限量版衛衣</h4>
-                                <p class="text-sexify font-black mt-2">$59.00</p>
+                                <h4 class="font-bold">創作者限量版衛衣</h4>
+                                <p class="text-red-500 font-black mt-2">$59.00</p>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 w-64 bg-white rounded-3xl overflow-hidden border">
+                            <div class="h-40 bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=500" class="w-full h-full object-cover">
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold">簽名寫真集 (實體)</h4>
+                                <p class="text-red-500 font-black mt-2">$35.00</p>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="px-5">
                     <h3 class="font-bold text-lg mb-4">為您推薦</h3>
-                    <div class="grid grid-cols-2 gap-4" id="dynamic-shop-grid"></div>
+                    <div class="grid grid-cols-2 gap-4" id="dynamic-shop-grid">
+                        </div>
                 </div>
             </section>
 
             <section id="upload-tab" class="tab-content px-6 pt-4">
-                <h2 class="text-2xl font-black mb-6">發佈至 Sexify</h2>
+                <h2 class="text-2xl font-black mb-6">發佈內容</h2>
                 <div class="space-y-6">
-                    <div id="drop-area" class="border-2 border-dashed border-red-200 rounded-[2rem] p-10 text-center bg-red-50/30" onclick="document.getElementById('file-input').click()">
-                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-sexify mb-4"></i>
-                        <p class="text-sm font-bold text-gray-700">選擇影片或相片</p>
+                    <div id="drop-area" class="border-2 border-dashed border-blue-300 rounded-3xl p-10 text-center bg-blue-50/50" onclick="document.getElementById('file-input').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-blue-400 mb-4"></i>
+                        <p class="text-sm font-bold text-blue-600">選擇影片或相片</p>
                         <input type="file" id="file-input" class="hidden" accept="video/*,image/*" onchange="handleFileSelect(this)">
                     </div>
 
-                    <div id="preview-container" class="hidden rounded-[2rem] overflow-hidden bg-gray-100 aspect-video relative border shadow-inner">
+                    <div id="preview-container" class="hidden rounded-2xl overflow-hidden bg-gray-100 aspect-video relative">
                         <img id="file-preview" class="w-full h-full object-cover">
-                        <div id="upload-overlay" class="absolute inset-0 bg-black/70 hidden flex flex-col items-center justify-center text-white p-6 backdrop-blur-sm">
-                            <p class="text-sm mb-3 font-bold tracking-widest">正在傳送至 Sexify... <span id="progress-percent">0%</span></p>
-                            <div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden">
-                                <div id="progress-bar" class="upload-progress-bar bg-sexify h-full w-0"></div>
+                        <div id="upload-overlay" class="absolute inset-0 bg-black/60 hidden flex flex-col items-center justify-center text-white p-4">
+                            <p class="text-sm mb-2 font-bold">上傳中... <span id="progress-percent">0%</span></p>
+                            <div class="w-full bg-white/20 h-1 rounded-full overflow-hidden">
+                                <div id="progress-bar" class="upload-progress-bar bg-blue-500 h-full w-0"></div>
                             </div>
                         </div>
-                        <button onclick="resetUpload()" class="absolute top-3 right-3 bg-black/50 text-white p-2 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+                        <button onclick="resetUpload()" class="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full"><i class="fa-solid fa-xmark"></i></button>
                     </div>
 
                     <div class="space-y-4">
-                        <div class="flex items-center space-x-3 border-b border-gray-100 py-3">
-                            <span class="text-xl font-black text-gray-400">$</span>
-                            <input id="post-price" type="number" class="w-full outline-none text-xl font-black" placeholder="設定價格 (0.00 為免費)">
-                        </div>
-                        <button onclick="startUpload()" class="w-full bg-sexify text-white font-bold py-5 rounded-2xl shadow-xl active:scale-95 transition">確認並上傳</button>
+                        <input id="post-price" type="number" class="w-full border-b focus:border-blue-500 outline-none py-2 text-xl font-black" placeholder="設定價格 $0.00">
+                        <button onclick="startUpload()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition">確認並上傳</button>
                     </div>
                 </div>
             </section>
@@ -359,46 +195,61 @@ const analytics = getAnalytics(app);
             <section id="profile-tab" class="tab-content">
                 <div class="bg-white px-6 pt-6 pb-4 border-b">
                     <div class="flex justify-between items-start mb-6">
-                        <div class="w-20 h-20 bg-gradient-to-tr from-red-600 to-purple-600 rounded-3xl p-1 shadow-lg">
-                            <div class="w-full h-full bg-white rounded-2xl overflow-hidden flex items-center justify-center">
-                                <i class="fa-solid fa-user text-3xl text-gray-200"></i>
+                        <div class="w-20 h-20 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-3xl p-1 shadow-lg">
+                            <div class="w-full h-full bg-white rounded-2xl overflow-hidden">
+                                <div class="w-full h-full bg-gray-100"></div>
                             </div>
                         </div>
                         <div class="flex space-x-2">
                             <button class="bg-gray-100 px-4 py-2 rounded-xl text-xs font-bold">編輯資料</button>
-                            <button class="bg-black text-white px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-share"></i></button>
+                            <button class="bg-gray-900 text-white px-4 py-2 rounded-xl text-xs font-bold"><i class="fa-solid fa-share"></i></button>
                         </div>
                     </div>
                     <h3 class="text-2xl font-black">Creator_Master</h3>
-                    <p class="text-sm text-gray-400 mb-4 tracking-tight">Sexify 認證創作者</p>
+                    <p class="text-sm text-gray-400 mb-4">專業創作者 | 分享最真實的一面</p>
                     
                     <div class="flex space-x-8 text-center border-t pt-4">
-                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">粉絲</p></div>
-                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">訂閱</p></div>
-                        <div><p class="font-black text-lg">0</p><p class="text-[10px] text-gray-400 uppercase">獲讚</p></div>
+                        <div><p class="font-black">0</p><p class="text-[10px] text-gray-400">粉絲</p></div>
+                        <div><p class="font-black">0</p><p class="text-[10px] text-gray-400">訂閱中</p></div>
+                        <div><p class="font-black">0</p><p class="text-[10px] text-gray-400">獲讚</p></div>
                     </div>
                 </div>
 
                 <div class="sticky top-[64px] bg-white z-30 flex border-b">
-                    <button onclick="toggleProfileView('my-posts')" id="btn-my-posts" class="flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify">我的發佈</button>
+                    <button onclick="toggleProfileView('my-posts')" id="btn-my-posts" class="flex-1 py-4 text-sm font-bold border-b-2 border-blue-600 text-blue-600">我的發佈</button>
                     <button onclick="toggleProfileView('my-stats')" id="btn-my-stats" class="flex-1 py-4 text-sm font-bold text-gray-400">數據分析</button>
                 </div>
 
-                <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-0.5 min-h-[300px]">
-                    <div class="aspect-square bg-gray-50 flex items-center justify-center text-gray-300 border-2 border-dashed rounded-lg m-1">
+                <div id="view-my-posts" class="p-1 grid grid-cols-3 gap-1">
+                    <div class="aspect-square bg-gray-100 flex items-center justify-center text-gray-300">
                         <i class="fa-solid fa-plus text-xl"></i>
                     </div>
                 </div>
 
                 <div id="view-my-stats" class="hidden p-5 space-y-6">
-                    <div class="grid grid-cols-2 gap-4 text-white">
-                        <div class="bg-black p-5 rounded-[2rem] shadow-xl">
-                            <p class="text-[10px] opacity-60 uppercase font-bold tracking-widest">總訂閱者</p>
-                            <p class="text-3xl font-black mt-2">0</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-900 p-5 rounded-3xl text-white">
+                            <p class="text-xs opacity-60">總訂閱者</p>
+                            <p class="text-3xl font-black mt-1">0</p>
                         </div>
-                        <div class="bg-sexify p-5 rounded-[2rem] shadow-xl">
-                            <p class="text-[10px] opacity-60 uppercase font-bold tracking-widest">累積收益</p>
-                            <p class="text-3xl font-black mt-2">$0</p>
+                        <div class="bg-white p-5 rounded-3xl border shadow-sm">
+                            <p class="text-xs text-gray-400">累積收益</p>
+                            <p class="text-3xl font-black mt-1">$0</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-3xl p-6 border shadow-sm">
+                        <h3 class="font-bold mb-4">本週觀看次數</h3>
+                        <div class="h-32 flex items-end justify-between px-2">
+                            <div class="w-4 bg-gray-100 h-[10%] rounded-t-full"></div>
+                            <div class="w-4 bg-gray-100 h-[15%] rounded-t-full"></div>
+                            <div class="w-4 bg-gray-100 h-[5%] rounded-t-full"></div>
+                            <div class="w-4 bg-blue-600 h-[0%] rounded-t-full"></div>
+                            <div class="w-4 bg-gray-100 h-[10%] rounded-t-full"></div>
+                            <div class="w-4 bg-gray-100 h-[20%] rounded-t-full"></div>
+                            <div class="w-4 bg-gray-100 h-[12%] rounded-t-full"></div>
+                        </div>
+                        <div class="flex justify-between mt-2 text-[10px] text-gray-400 px-1">
+                            <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
                         </div>
                     </div>
                 </div>
@@ -408,26 +259,26 @@ const analytics = getAnalytics(app);
 
         <footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t safe-area-bottom z-50">
             <div class="flex justify-around items-center h-16">
-                <button onclick="switchTab('home-tab')" class="nav-btn text-sexify flex flex-col items-center">
+                <button onclick="switchTab('home-tab')" class="nav-btn text-blue-600 flex flex-col items-center">
                     <i class="fa-solid fa-house text-xl"></i>
-                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">首頁</span>
+                    <span class="text-[10px] mt-1 font-bold">首頁</span>
                 </button>
-                <button onclick="switchTab('search-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                <button onclick="switchTab('search-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
                     <i class="fa-solid fa-magnifying-glass text-xl"></i>
-                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">搜尋</span>
+                    <span class="text-[10px] mt-1 font-bold">搜尋</span>
                 </button>
-                <button onclick="switchTab('upload-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
-                    <div class="w-12 h-12 bg-sexify text-white rounded-2xl flex items-center justify-center -mt-10 border-4 border-white shadow-xl rotate-45 transition active:scale-90">
-                        <i class="fa-solid fa-plus text-xl -rotate-45"></i>
+                <button onclick="switchTab('upload-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center -mt-8 border-4 border-gray-50 shadow-lg">
+                        <i class="fa-solid fa-plus text-xl"></i>
                     </div>
                 </button>
-                <button onclick="switchTab('shop-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                <button onclick="switchTab('shop-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
                     <i class="fa-solid fa-store text-xl"></i>
-                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">商店</span>
+                    <span class="text-[10px] mt-1 font-bold">商店</span>
                 </button>
-                <button onclick="switchTab('profile-tab')" class="nav-btn text-gray-300 flex flex-col items-center">
+                <button onclick="switchTab('profile-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
                     <i class="fa-solid fa-user text-xl"></i>
-                    <span class="text-[9px] mt-1 font-bold uppercase tracking-tighter">個人</span>
+                    <span class="text-[10px] mt-1 font-bold">個人</span>
                 </button>
             </div>
         </footer>
@@ -435,22 +286,27 @@ const analytics = getAnalytics(app);
 
     <script>
         let selectedFile = null;
+
+        // 初始化商店內容
         const products = [
-            { name: "私人訂製影片", price: 99.00, img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500", tag: "HOT" },
-            { name: "限定簽名拍立得", price: 45.00, img: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=500", tag: "NEW" },
-            { name: "1對1 私訊解鎖", price: 29.99, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500", tag: "RECOM" },
-            { name: "創作者聯名香水", price: 120.00, img: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", tag: "LIMIT" }
+            { name: "私人訂製影片", price: 99.00, img: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=500", tag: "熱門" },
+            { name: "限定簽名拍立得", price: 45.00, img: "https://images.unsplash.com/photo-1554048612-b6a482bc67e5?w=500", tag: "最新" },
+            { name: "1對1 私訊解鎖", price: 29.99, img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500", tag: "推薦" },
+            { name: "創作者聯名香水", price: 120.00, img: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500", tag: "熱門" }
         ];
 
         function renderShop() {
             const grid = document.getElementById('dynamic-shop-grid');
+            // 隨機打亂模擬演算法
             const shuffled = [...products].sort(() => 0.5 - Math.random());
             grid.innerHTML = shuffled.map(p => `
-                <div class="bg-white rounded-[1.5rem] overflow-hidden border shadow-sm">
-                    <div class="aspect-square bg-gray-100"><img src="${p.img}" class="w-full h-full object-cover"></div>
+                <div class="bg-white rounded-3xl overflow-hidden border shadow-sm">
+                    <div class="aspect-square bg-gray-100">
+                        <img src="${p.img}" class="w-full h-full object-cover">
+                    </div>
                     <div class="p-3">
-                        <div class="text-[9px] text-sexify font-black mb-1 tracking-tighter">${p.tag}</div>
-                        <h4 class="font-bold text-xs truncate text-gray-800">${p.name}</h4>
+                        <div class="text-[10px] text-blue-600 font-bold mb-1">${p.tag}</div>
+                        <h4 class="font-bold text-xs truncate">${p.name}</h4>
                         <p class="text-sm font-black mt-1">$${p.price.toFixed(2)}</p>
                     </div>
                 </div>
@@ -458,20 +314,18 @@ const analytics = getAnalytics(app);
         }
 
         function verifyAge() {
-            document.getElementById('age-gate').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('age-gate').style.display = 'none';
-                document.getElementById('app-content').classList.remove('blur-2xl');
-                document.getElementById('app-content').style.pointerEvents = 'auto';
-                renderShop();
-            }, 500);
+            document.getElementById('age-gate').style.display = 'none';
+            document.getElementById('app-content').classList.remove('blur-2xl');
+            renderShop(); // 進入時加載商店
         }
 
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-sexify', 'text-gray-300'));
-            event.currentTarget.classList.replace('text-gray-300', 'text-sexify');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-blue-600', 'text-gray-400'));
+            event.currentTarget.classList.replace('text-gray-400', 'text-blue-600');
+            
             if(tabId === 'shop-tab') renderShop();
             window.scrollTo(0,0);
         }
@@ -483,16 +337,19 @@ const analytics = getAnalytics(app);
             const statView = document.getElementById('view-my-stats');
 
             if(view === 'my-posts') {
-                postView.classList.remove('hidden'); statView.classList.add('hidden');
-                postBtn.className = "flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify";
+                postView.classList.remove('hidden');
+                statView.classList.add('hidden');
+                postBtn.className = "flex-1 py-4 text-sm font-bold border-b-2 border-blue-600 text-blue-600";
                 statBtn.className = "flex-1 py-4 text-sm font-bold text-gray-400";
             } else {
-                postView.classList.add('hidden'); statView.classList.remove('hidden');
-                statBtn.className = "flex-1 py-4 text-sm font-bold border-b-2 border-sexify text-sexify";
+                postView.classList.add('hidden');
+                statView.classList.remove('hidden');
+                statBtn.className = "flex-1 py-4 text-sm font-bold border-b-2 border-blue-600 text-blue-600";
                 postBtn.className = "flex-1 py-4 text-sm font-bold text-gray-400";
             }
         }
 
+        // Firebase 上傳邏輯
         function handleFileSelect(input) {
             selectedFile = input.files[0];
             if (selectedFile) {
@@ -507,10 +364,11 @@ const analytics = getAnalytics(app);
         }
 
         async function startUpload() {
-            if (!selectedFile) return alert("請先選擇要上傳的內容");
+            if (!selectedFile) return alert("請選擇內容");
             const { storage, ref, uploadBytesResumable, getDownloadURL } = window.firebaseStorage;
-            const storageRef = ref(storage, 'sexify_uploads/' + Date.now() + '_' + selectedFile.name);
+            const storageRef = ref(storage, 'uploads/' + Date.now());
             const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+
             document.getElementById('upload-overlay').classList.remove('hidden');
 
             uploadTask.on('state_changed', 
@@ -519,11 +377,11 @@ const analytics = getAnalytics(app);
                     document.getElementById('progress-bar').style.width = p + '%';
                     document.getElementById('progress-percent').innerText = Math.round(p) + '%';
                 },
-                (err) => alert("上傳失敗：" + err.message),
+                null,
                 async () => {
                     const url = await getDownloadURL(uploadTask.snapshot.ref);
                     addToGrid(url);
-                    alert("Sexify: 內容已成功上傳至雲端！");
+                    alert("上傳雲端成功！");
                     resetUpload();
                     switchTab('profile-tab');
                 }
@@ -535,19 +393,18 @@ const analytics = getAnalytics(app);
             document.getElementById('preview-container').classList.add('hidden');
             document.getElementById('drop-area').classList.remove('hidden');
             document.getElementById('upload-overlay').classList.add('hidden');
-            document.getElementById('file-input').value = "";
         }
 
         function addToGrid(url) {
             const grid = document.getElementById('view-my-posts');
             const div = document.createElement('div');
-            div.className = "aspect-square bg-gray-200 overflow-hidden rounded-md";
+            div.className = "aspect-square bg-gray-200 overflow-hidden";
             div.innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
             grid.prepend(div);
         }
 
         function showPay() {
-            if(confirm("確認支付 $9.99 訂閱此創作者？")) {
+            if(confirm("訂閱此創作者以觀看所有內容？")) {
                 document.getElementById('post-img').classList.remove('blur-3xl');
                 document.getElementById('post-lock').classList.add('hidden');
             }

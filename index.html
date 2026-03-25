@@ -3,25 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sexify App</title>
+    <title>Sexify Premium - Creator Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
     <style>
-        /* 隱藏捲動條但保留功能 */
         ::-webkit-scrollbar { display: none; }
         body { 
-            -webkit-tap-highlight-color: transparent; /* 移除手機點擊陰影 */
-            user-select: none; /* 防止文字被選取（保護內容） */
+            -webkit-tap-highlight-color: transparent; 
+            user-select: none; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
         .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .glass-morphism { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-white text-gray-900 overflow-x-hidden">
+<body class="bg-gray-50 text-gray-900 overflow-x-hidden">
 
     <div id="age-gate" class="fixed inset-0 z-[100] flex items-center justify-center bg-black">
         <div class="bg-white p-8 rounded-3xl max-w-sm w-11/12 text-center shadow-2xl">
             <h2 class="text-2xl font-black mb-6">🔞 內容確認</h2>
-            <button onclick="verifyAge()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl mb-4 shadow-lg">進入專屬空間</button>
+            <p class="text-gray-500 mb-6 text-sm">此平台包含成人內容，您必須年滿 18 歲才能進入。</p>
+            <button onclick="verifyAge()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl mb-4 shadow-lg active:scale-95 transition">進入專屬空間</button>
             <button onclick="window.location.href='https://google.com'" class="text-gray-400 text-sm">我未滿 18 歲</button>
         </div>
     </div>
@@ -30,57 +34,280 @@
         
         <header class="sticky top-0 bg-white/80 backdrop-blur-md border-b z-40 px-5 py-4 flex justify-between items-center">
             <h1 class="text-xl font-black tracking-tighter text-blue-600">Sexify</h1>
-            <i class="fa-regular fa-paper-plane text-xl text-gray-700"></i>
+            <div class="flex space-x-4">
+                <i class="fa-regular fa-paper-plane text-xl text-gray-700"></i>
+                <i class="fa-regular fa-bell text-xl text-gray-700"></i>
+            </div>
         </header>
 
         <main class="pb-32">
-            <div class="flex space-x-4 overflow-x-auto p-4 no-scrollbar">
-                <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-pink-500 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
-                <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-blue-500 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
-                <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-pink-500 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
-                <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-gray-300 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
-            </div>
+            
+            <section id="home-tab" class="tab-content active">
+                <div class="flex space-x-4 overflow-x-auto p-4 no-scrollbar">
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-pink-500 p-0.5"><div class="w-full h-full bg-gradient-to-tr from-yellow-400 to-purple-600 rounded-full"></div></div>
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-blue-500 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
+                    <div class="flex-shrink-0 w-16 h-16 rounded-full ring-2 ring-pink-500 p-0.5"><div class="w-full h-full bg-gray-200 rounded-full"></div></div>
+                </div>
 
-            <div class="space-y-1">
-                <div class="p-4 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 bg-gray-300 rounded-full"></div>
-                        <span class="font-bold text-sm">Premium_Creator_01</span>
+                <div class="space-y-6">
+                    <div class="bg-white border-y">
+                        <div class="p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full"></div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-sm">Premium_Creator_01</span>
+                                    <span class="text-xs text-gray-400">2 小時前</span>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </div>
+                        <div class="relative aspect-square bg-gray-100">
+                            <img id="post-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover blur-3xl transition-all duration-700">
+                            <div id="post-lock" class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white backdrop-blur-sm">
+                                <i class="fa-solid fa-lock mb-3 text-3xl"></i>
+                                <button onclick="showPay()" class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold text-sm shadow-xl active:scale-95 transition">解鎖此貼文 $4.99</button>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="flex space-x-4 text-xl">
+                                <i class="fa-regular fa-heart"></i>
+                                <i class="fa-regular fa-comment"></i>
+                                <i class="fa-regular fa-bookmark"></i>
+                            </div>
+                            <p class="text-sm"><span class="font-bold">1,204 次贊</span></p>
+                            <p class="text-sm text-gray-600">這是專屬訂閱者的驚喜內容...</p>
+                        </div>
                     </div>
-                    <i class="fa-solid fa-ellipsis"></i>
                 </div>
-                <div class="relative aspect-square bg-gray-100 group">
-                    <img id="post-img" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover blur-3xl">
-                    <div id="post-lock" class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white">
-                        <button onclick="showPay()" class="bg-white text-black px-6 py-2 rounded-full font-bold text-sm shadow-xl active:scale-95 transition">解鎖此貼文 $4.99</button>
+            </section>
+
+            <section id="shop-tab" class="tab-content px-4 pt-4">
+                <h2 class="text-2xl font-black mb-6">實體商品商店</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border">
+                        <div class="aspect-square bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs text-blue-600 font-bold">限定周邊</p>
+                            <h3 class="font-bold text-sm truncate">創作者簽名 T-Shirt</h3>
+                            <div class="mt-2 flex justify-between items-center">
+                                <span class="font-black text-red-500">$29.99</span>
+                                <button class="bg-gray-100 p-2 rounded-full"><i class="fa-solid fa-cart-plus text-xs"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border">
+                        <div class="aspect-square bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1583946099379-f9c9cb8bc030?w=500" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs text-blue-600 font-bold">數位收藏</p>
+                            <h3 class="font-bold text-sm truncate">私藏相冊實體版</h3>
+                            <div class="mt-2 flex justify-between items-center">
+                                <span class="font-black text-red-500">$45.00</span>
+                                <button class="bg-gray-100 p-2 rounded-full"><i class="fa-solid fa-cart-plus text-xs"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <section id="upload-tab" class="tab-content px-6 pt-4">
+                <h2 class="text-2xl font-black mb-6">發佈新內容</h2>
+                <div class="space-y-6">
+                    <div id="drop-area" class="border-2 border-dashed border-blue-300 rounded-3xl p-10 text-center bg-blue-50/50" onclick="document.getElementById('file-input').click()">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl text-blue-400 mb-4"></i>
+                        <p class="text-sm font-bold text-blue-600">點擊或拖放影片/相片</p>
+                        <p class="text-xs text-gray-400 mt-2">支援 MP4, MOV, JPG, PNG</p>
+                        <input type="file" id="file-input" class="hidden" accept="video/*,image/*" onchange="handleFileSelect(this)">
+                    </div>
+
+                    <div id="preview-container" class="hidden rounded-2xl overflow-hidden bg-gray-100 aspect-video relative">
+                        <img id="file-preview" class="w-full h-full object-cover">
+                        <button onclick="resetUpload()" class="absolute top-2 right-2 bg-black/50 text-white p-2 rounded-full"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase">內容描述</label>
+                            <textarea class="w-full border-b focus:border-blue-500 outline-none py-2 text-sm" placeholder="寫點什麼吸引訂閱者..."></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-gray-400 uppercase">設定解鎖價格 (USD)</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl font-bold">$</span>
+                                <input type="number" class="w-full border-b focus:border-blue-500 outline-none py-2 text-xl font-black" placeholder="4.99">
+                            </div>
+                        </div>
+                        <button class="w-full bg-blue-600 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition">立即發佈內容</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="stats-tab" class="tab-content px-5 pt-4">
+                <h2 class="text-2xl font-black mb-6">創作者數據</h2>
+                
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 p-5 rounded-3xl text-white">
+                        <p class="text-xs opacity-80">總訂閱者</p>
+                        <p class="text-3xl font-black mt-1">12,842</p>
+                        <p class="text-[10px] mt-2 text-green-300"><i class="fa-solid fa-arrow-up"></i> 本月 +12%</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-3xl border shadow-sm">
+                        <p class="text-xs text-gray-400">本月預估收益</p>
+                        <p class="text-3xl font-black mt-1 text-gray-800">$4,250</p>
+                        <p class="text-[10px] mt-2 text-blue-500">結算日: 04/01</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-6 border shadow-sm mb-6">
+                    <h3 class="font-bold mb-4">內容觀看表現</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">總觀看次數</span>
+                            <span class="font-bold">452.1K</span>
+                        </div>
+                        <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+                            <div class="bg-blue-600 h-full w-[75%]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl p-6 border shadow-sm">
+                    <h3 class="font-bold mb-4">最受歡迎內容類型</h3>
+                    <div class="space-y-5">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-pink-100 text-pink-500 rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-bold">短影片內容</span>
+                                    <span class="text-xs text-gray-400">65% 佔比</span>
+                                </div>
+                                <div class="w-full bg-gray-100 h-1.5 rounded-full">
+                                    <div class="bg-pink-500 h-full w-[65%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-bold">私密寫真</span>
+                                    <span class="text-xs text-gray-400">25% 佔比</span>
+                                </div>
+                                <div class="w-full bg-gray-100 h-1.5 rounded-full">
+                                    <div class="bg-blue-500 h-full w-[25%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-10 h-10 bg-purple-100 text-purple-500 rounded-xl flex items-center justify-center">
+                                <i class="fa-solid fa-comment-dots"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm font-bold">1對1 私訊</span>
+                                    <span class="text-xs text-gray-400">10% 佔比</span>
+                                </div>
+                                <div class="w-full bg-gray-100 h-1.5 rounded-full">
+                                    <div class="bg-purple-500 h-full w-[10%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <footer class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t safe-area-bottom z-50">
             <div class="flex justify-around items-center h-16">
-                <button class="text-blue-600"><i class="fa-solid fa-house text-xl"></i></button>
-                <button class="text-gray-400"><i class="fa-solid fa-magnifying-glass text-xl"></i></button>
-                <button class="text-gray-400"><i class="fa-solid fa-square-plus text-2xl"></i></button>
-                <button class="text-gray-400"><i class="fa-solid fa-heart text-xl"></i></button>
-                <button class="text-gray-400"><i class="fa-solid fa-user text-xl"></i></button>
+                <button onclick="switchTab('home-tab')" class="nav-btn text-blue-600 flex flex-col items-center">
+                    <i class="fa-solid fa-house text-xl"></i>
+                    <span class="text-[10px] mt-1 font-bold">首頁</span>
+                </button>
+                <button onclick="switchTab('shop-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
+                    <i class="fa-solid fa-store text-xl"></i>
+                    <span class="text-[10px] mt-1 font-bold">商店</span>
+                </button>
+                <button onclick="switchTab('upload-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center -mt-8 border-4 border-gray-50 shadow-lg">
+                        <i class="fa-solid fa-plus text-xl"></i>
+                    </div>
+                </button>
+                <button onclick="switchTab('stats-tab')" class="nav-btn text-gray-400 flex flex-col items-center">
+                    <i class="fa-solid fa-chart-line text-xl"></i>
+                    <span class="text-[10px] mt-1 font-bold">數據</span>
+                </button>
+                <button class="text-gray-400 flex flex-col items-center">
+                    <i class="fa-solid fa-user text-xl"></i>
+                    <span class="text-[10px] mt-1 font-bold">個人</span>
+                </button>
             </div>
         </footer>
     </div>
 
     <script>
+        // 年齡驗證
         function verifyAge() {
             document.getElementById('age-gate').style.display = 'none';
             document.getElementById('app-content').classList.remove('blur-2xl');
         }
 
+        // 解鎖貼文 (保留原始邏輯)
         function showPay() {
-            // 模擬解鎖效果
             if(confirm("確認支付 $4.99 觀看內容？")) {
                 document.getElementById('post-img').classList.remove('blur-3xl');
                 document.getElementById('post-lock').classList.add('hidden');
             }
+        }
+
+        // 分頁切換邏輯
+        function switchTab(tabId) {
+            // 隱藏所有分頁
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // 顯示目標分頁
+            document.getElementById(tabId).classList.add('active');
+            
+            // 更新按鈕顏色
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.replace('text-blue-600', 'text-gray-400');
+            });
+            event.currentTarget.classList.replace('text-gray-400', 'text-blue-600');
+            
+            // 捲動回頂部
+            window.scrollTo(0,0);
+        }
+
+        // 上傳預覽處理
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.getElementById('preview-container');
+                    const img = document.getElementById('file-preview');
+                    const dropArea = document.getElementById('drop-area');
+                    
+                    img.src = e.target.result;
+                    container.classList.remove('hidden');
+                    dropArea.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function resetUpload() {
+            document.getElementById('preview-container').classList.add('hidden');
+            document.getElementById('drop-area').classList.remove('hidden');
+            document.getElementById('file-input').value = '';
         }
     </script>
 </body>
